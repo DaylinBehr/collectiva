@@ -70,7 +70,7 @@ class LoginView extends StatelessWidget {
                                   labelStyle: TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
-                                  )
+                                  ),
                                   hintStyle: TextStyle(
                                     color: Colors.grey,
                                   ),
