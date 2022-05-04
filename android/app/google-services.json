@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "80637959733",
+    "project_id": "collectiva-80e4a",
+    "storage_bucket": "collectiva-80e4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80637959733:android:cae069b2155e56519b9b7c",
+        "android_client_info": {
+          "package_name": "com.st10123636.collectiva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80637959733-49705c8dpllr5n7au59v645pjjealk53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOti2rWViISX4ucCqzEDnq-SjyHNnVVPg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80637959733-49705c8dpllr5n7au59v645pjjealk53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
