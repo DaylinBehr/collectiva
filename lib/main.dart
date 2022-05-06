@@ -26,7 +26,7 @@ class CollectivaAppEntryPoint extends StatelessWidget {
       defaultThemeMode: ThemeMode.system,
       darkTheme: ThemeData.dark(),
       lightTheme: ThemeData.light(),
-      statusBarColorBuilder: (theme) => theme!.colorScheme.secondary,
+      // statusBarColorBuilder: (theme) => theme!.colorScheme.primary,
 
       // statusBarColorBuilder: (theme) => theme!.colorScheme.secondary,
       builder: (context, themeLight, themeDark, modeTheme) => MaterialApp(
@@ -48,7 +48,7 @@ class CollectivaAppEntryPoint extends StatelessWidget {
         // ),
         onGenerateRoute: StackedRouter().onGenerateRoute,
         navigatorKey: StackedService.navigatorKey,
-        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
