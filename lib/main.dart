@@ -48,7 +48,7 @@ class CollectivaAppEntryPoint extends StatelessWidget {
         // ),
         onGenerateRoute: StackedRouter().onGenerateRoute,
         navigatorKey: StackedService.navigatorKey,
-        // debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );

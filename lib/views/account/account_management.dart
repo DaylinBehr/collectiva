@@ -42,7 +42,7 @@ class ResetPasswordView extends StatelessWidget with $ResetPasswordView {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                obscureText: model.isPasswordHidden,
+                // obscureText: model.isPasswordHidden,
                 enableSuggestions: false,
                 autocorrect: false,
                 controller: resetPasswordController,
@@ -66,7 +66,7 @@ class ResetPasswordView extends StatelessWidget with $ResetPasswordView {
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  hintText: 'Enter your new password',
+                  hintText: 'Enter your Account Email',
                   hintStyle: TextStyle(
                     color: Colors.grey[400],
                   ),
@@ -76,17 +76,17 @@ class ResetPasswordView extends StatelessWidget with $ResetPasswordView {
                     Icons.lock_outline,
                     color: Color(0x80FFFFFF),
                   ),
-                  suffixIcon: InkWell(
-                    onTap: () => model.setPasswordVisibility(),
-                    child: Icon(
-                      model.isPasswordHidden
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: const Color(0x80FFFFFF),
-                      size: 22,
-                    ),
-                  ),
-                  labelText: 'Password Reset',
+                  // suffixIcon: InkWell(
+                  //   onTap: () => model.setPasswordVisibility(),
+                  //   child: Icon(
+                  //     model.isPasswordHidden
+                  //         ? Icons.visibility_outlined
+                  //         : Icons.visibility_off_outlined,
+                  //     color: const Color(0x80FFFFFF),
+                  //     size: 22,
+                  //   ),
+                  // ),
+                  labelText: 'Email Address',
                   labelStyle: TextStyle(
                     color: Colors.grey[300],
                   ),
@@ -95,7 +95,7 @@ class ResetPasswordView extends StatelessWidget with $ResetPasswordView {
                 // keyboardType: TextInputType.,
                 validator: (inputText) {
                   if (inputText!.isEmpty) {
-                    return 'Please enter a password!';
+                    return 'Please enter a valid email address!';
                   }
                   return null;
                 },
@@ -119,7 +119,7 @@ class EditProfileView extends StatelessWidget with $ResetPasswordView{
       builder: (context, model, child) => Scaffold(
         backgroundColor: collectivaBlackBG,
         appBar: AppBar(
-          title: const Text('Reset Password'),
+          title: const Text('Update Profile'),
           actions: [
             Tooltip(
               message: 'Save',

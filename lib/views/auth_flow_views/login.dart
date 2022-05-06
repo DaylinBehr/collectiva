@@ -14,6 +14,7 @@ import 'login.form.dart';
 ])
 class LoginView extends StatelessWidget with $LoginView {
   LoginView({Key? key}) : super(key: key);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,7 @@ class LoginView extends StatelessWidget with $LoginView {
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             24, 20, 24, 20),
                         child: Form(
+                          key: _formKey,
                           child: SingleChildScrollView(
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -88,7 +90,7 @@ class LoginView extends StatelessWidget with $LoginView {
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (inputText) {
-                                    if (inputText!.isEmpty) {
+                                    if (inputText!.isEmpty || inputText != 'test@email.com') {
                                       return 'Please fill in a valid email address...';
                                     }
                                     return null;
@@ -152,8 +154,8 @@ class LoginView extends StatelessWidget with $LoginView {
                                   ),
                                   // keyboardType: TextInputType.,
                                   validator: (inputText) {
-                                    if (inputText!.isEmpty) {
-                                      return 'Please enter a password!';
+                                    if (inputText!.isEmpty || inputText != 'admin') {
+                                      return 'Please enter a valid password!';
                                     }
                                     return null;
                                   },
@@ -165,8 +167,13 @@ class LoginView extends StatelessWidget with $LoginView {
                                   height: screenSize.height * 0.08,
                                   width: screenSize.width * 0.6,
                                   child: ElevatedButton(
-                                    onPressed: () async =>
-                                        await model.navigateToCollections(),
+                                    onPressed: () async {
+                                    if(_formKey.currentState!.validate()) {
+                                        await model.navigateToCollections();
+                                    }else{
+
+                                    }
+    },
                                     style: ElevatedButton.styleFrom(
                                       primary: const Color(0xFF414042),
                                       shape: RoundedRectangleBorder(
