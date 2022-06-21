@@ -1,14 +1,14 @@
 class UserModel {
   String id = '';
   String name = '';
+  String username = '';
   String email = '';
-  String photoUrl = '';
 
   UserModel({
     required this.id,
     required this.name,
+    required this.username,
     required this.email,
-    required this.photoUrl,
   });
 
   static UserModel? fromData(jsonDecode) {
@@ -17,17 +17,18 @@ class UserModel {
     }
     return UserModel(
       id: jsonDecode['id'] as String,
-      name: jsonDecode['name'] as String,
+      name: jsonDecode['username'] as String,
+      username: jsonDecode['username'] as String,
       email: jsonDecode['email'] as String,
-      photoUrl: jsonDecode['photoUrl'] as String,
     );
   }
   static toJson(UserModel userModel) {
     return {
       'id': userModel.id,
       'name': userModel.name,
+      'username': userModel.name,
       'email': userModel.email,
-      'photoUrl': userModel.photoUrl,
+
     };
   }
 }

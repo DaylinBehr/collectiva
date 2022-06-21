@@ -5,13 +5,13 @@ import '../../app/app.locator.dart';
 import '../../app/app.router.dart';
 import '../../services/authentication_service.dart';
 
-class StartUpViewModel extends BaseViewModel{
+class StartUpViewModel extends BaseViewModel {
   final AuthService _authenticationService =
   locator<AuthService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
   Future handleStartUpLogic() async {
-    // setBusy(true);
+    setBusy(true);
     notifyListeners();
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
 

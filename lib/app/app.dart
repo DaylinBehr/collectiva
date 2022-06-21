@@ -1,3 +1,5 @@
+import 'package:collectiva/services/image_method_service.dart';
+import 'package:collectiva/services/storage_service.dart';
 import 'package:collectiva/views/account/account_management.dart';
 import 'package:collectiva/views/auth_flow_views/login.dart';
 import 'package:collectiva/views/auth_flow_views/register.dart';
@@ -30,9 +32,13 @@ import '../views/items_view_item/items_view_item.dart';
   MaterialRoute(page: ItemView),
 ], dependencies: [
   Singleton(classType: NavigationService),
+
   LazySingleton(classType: DialogService),
   LazySingleton(classType: AuthService),
   LazySingleton(classType: FireStoreService),
+  LazySingleton(classType: SnackbarService),
+  LazySingleton(classType: CloudStorageService),
+  LazySingleton(classType: ImageMethodService),
   LazySingleton(
       classType: ThemeService, resolveUsing: ThemeService.getInstance),
 ])

@@ -5,6 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 @FormView(fields: [
+  FormTextField(initialValue: '', isPassword: false, name: "registerName"),
   FormTextField(initialValue: '', isPassword: false, name: "registerUserName"),
   FormTextField(name: 'registerEmail', isPassword: false, initialValue: ''),
   FormTextField(name: 'registerPassword', isPassword: true, initialValue: ''),
@@ -13,6 +14,7 @@ import 'package:stacked/stacked_annotations.dart';
 ])
 class RegisterView extends StatelessWidget with $RegisterView {
   RegisterView({Key? key}) : super(key: key);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +43,69 @@ class RegisterView extends StatelessWidget with $RegisterView {
                         padding: const EdgeInsetsDirectional.fromSTEB(
                             24, 20, 24, 20),
                         child: Form(
+                          key: _formKey,
                           child: SingleChildScrollView(
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 TextFormField(
                                   obscureText: false,
+                                  keyboardType: TextInputType.name,
+                                  textInputAction: TextInputAction.next,
+                                  controller: registerNameController,
+                                  focusNode: registerNameFocusNode,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    enabledBorder:  OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFF359F8A),
+                                        width: 1,
+                                      ),
+                                      borderRadius:
+                                      BorderRadius.circular(8),
+                                    ),
+                                    focusedBorder:  OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFFF2F2F2),
+                                        width: 1,
+                                      ),
+                                      borderRadius:
+                                      BorderRadius.circular(8),
+                                    ),
+                                    hintText: 'Enter your Name',
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey[400],
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xFF359F8A),
+                                    prefixIcon: const Icon(
+                                      Icons.person_outlined,
+                                      color: Color(0x80FFFFFF),
+                                    ),
+                                    labelText: 'Name',
+                                    labelStyle: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                  ),
+                                  validator: (inputText) {
+                                    if (inputText!.isEmpty) {
+                                      return 'Please fill in a valid name...';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  obscureText: false,
+                                  keyboardType: TextInputType.name,
+                                  textInputAction: TextInputAction.next,
                                   controller: registerUserNameController,
                                   focusNode: registerUserNameFocusNode,
                                   style: const TextStyle(
@@ -56,7 +115,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     border: const OutlineInputBorder(),
                                     enabledBorder:  OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                        color: const Color(0xFF359F8A),
+                                        color: Color(0xFF359F8A),
                                         width: 1,
                                       ),
                                       borderRadius:
@@ -64,7 +123,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     ),
                                     focusedBorder:  OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                        color: const Color(0xFFF2F2F2),
+                                        color: Color(0xFFF2F2F2),
                                         width: 1,
                                       ),
                                       borderRadius:
@@ -77,7 +136,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     filled: true,
                                     fillColor: const Color(0xFF359F8A),
                                     prefixIcon: const Icon(
-                                      Icons.person_outlined,
+                                      Icons.account_circle_outlined,
                                       color: Color(0x80FFFFFF),
                                     ),
                                     labelText: 'Username',
@@ -87,10 +146,9 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                   ),
-                                  keyboardType: TextInputType.name,
                                   validator: (inputText) {
                                     if (inputText!.isEmpty) {
-                                      return 'Please fill in a valid email address...';
+                                      return 'Please fill in a valid username...';
                                     }
                                     return null;
                                   },
@@ -100,6 +158,8 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                 ),
                                 TextFormField(
                                   obscureText: false,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.next,
                                   controller: registerEmailController,
                                   focusNode: registerEmailFocusNode,
                                   style: const TextStyle(
@@ -117,7 +177,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     ),
                                     focusedBorder:  OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                        color: const Color(0xFFF2F2F2),
+                                        color: Color(0xFFF2F2F2),
                                         width: 1,
                                       ),
                                       borderRadius:
@@ -140,7 +200,6 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                   ),
-                                  keyboardType: TextInputType.emailAddress,
                                   validator: (inputText) {
                                     if (inputText!.isEmpty) {
                                       return 'Please fill in a valid email address...';
@@ -155,6 +214,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                   obscureText: model.isPasswordHidden,
                                   enableSuggestions: false,
                                   autocorrect: false,
+                                  textInputAction: TextInputAction.next,
                                   controller: registerPasswordController,
                                   focusNode: registerPasswordFocusNode,
                                   style: const TextStyle(
@@ -164,7 +224,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     border: const OutlineInputBorder(),
                                     enabledBorder:  OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                        color: const Color(0xFF359F8A),
+                                        color: Color(0xFF359F8A),
                                         width: 1,
                                       ),
                                       borderRadius:
@@ -172,7 +232,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     ),
                                     focusedBorder:  OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                        color: const Color(0xFFF2F2F2),
+                                        color: Color(0xFFF2F2F2),
                                         width: 1,
                                       ),
                                       borderRadius:
@@ -206,7 +266,6 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                   ),
-                                  // keyboardType: TextInputType.,
                                   validator: (inputText) {
                                     if (inputText!.isEmpty) {
                                       return 'Please enter a password!';
@@ -219,6 +278,7 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                 ),
                                 TextFormField(
                                   obscureText: model.isPasswordHidden,
+                                  textInputAction: TextInputAction.next,
                                   enableSuggestions: false,
                                   autocorrect: false,
                                   controller: registerConfirmPasswordController,
@@ -272,9 +332,8 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                   ),
-                                  // keyboardType: TextInputType.,
                                   validator: (inputText) {
-                                    if (inputText!.isEmpty) {
+                                    if (inputText!.isEmpty || inputText != registerPasswordController.text) {
                                       return 'Please enter your correct password!';
                                     }
                                     return null;
@@ -288,7 +347,9 @@ class RegisterView extends StatelessWidget with $RegisterView {
                                   width: screenSize.width * 0.6,
                                   child: ElevatedButton(
                                     onPressed: ()async {
-                                      await model.navigateToLogin();
+                                      if(_formKey.currentState!.validate()) {
+                                        await model.registerUser(registerEmailController.text, registerNameController.text, registerUserNameController.text, registerPasswordController.text);
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                         primary: const Color(0xFF414042),shape: RoundedRectangleBorder(

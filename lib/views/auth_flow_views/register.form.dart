@@ -9,12 +9,15 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+const String RegisterNameValueKey = 'registerName';
 const String RegisterUserNameValueKey = 'registerUserName';
 const String RegisterEmailValueKey = 'registerEmail';
 const String RegisterPasswordValueKey = 'registerPassword';
 const String RegisterConfirmPasswordValueKey = 'registerConfirmPassword';
 
 mixin $RegisterView on StatelessWidget {
+  final TextEditingController registerNameController =
+      TextEditingController(text: '');
   final TextEditingController registerUserNameController =
       TextEditingController(text: '');
   final TextEditingController registerEmailController =
@@ -23,6 +26,7 @@ mixin $RegisterView on StatelessWidget {
       TextEditingController(text: '');
   final TextEditingController registerConfirmPasswordController =
       TextEditingController(text: '');
+  final FocusNode registerNameFocusNode = FocusNode();
   final FocusNode registerUserNameFocusNode = FocusNode();
   final FocusNode registerEmailFocusNode = FocusNode();
   final FocusNode registerPasswordFocusNode = FocusNode();
@@ -31,6 +35,7 @@ mixin $RegisterView on StatelessWidget {
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
   void listenToFormUpdated(FormViewModel model) {
+    registerNameController.addListener(() => _updateFormData(model));
     registerUserNameController.addListener(() => _updateFormData(model));
     registerEmailController.addListener(() => _updateFormData(model));
     registerPasswordController.addListener(() => _updateFormData(model));
@@ -41,6 +46,7 @@ mixin $RegisterView on StatelessWidget {
   void _updateFormData(FormViewModel model) => model.setData(
         model.formValueMap
           ..addAll({
+            RegisterNameValueKey: registerNameController.text,
             RegisterUserNameValueKey: registerUserNameController.text,
             RegisterEmailValueKey: registerEmailController.text,
             RegisterPasswordValueKey: registerPasswordController.text,
@@ -53,6 +59,8 @@ mixin $RegisterView on StatelessWidget {
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
+    registerNameController.dispose();
+    registerNameFocusNode.dispose();
     registerUserNameController.dispose();
     registerUserNameFocusNode.dispose();
     registerEmailController.dispose();
@@ -65,6 +73,8 @@ mixin $RegisterView on StatelessWidget {
 }
 
 extension ValueProperties on FormViewModel {
+  String? get registerNameValue =>
+      this.formValueMap[RegisterNameValueKey] as String?;
   String? get registerUserNameValue =>
       this.formValueMap[RegisterUserNameValueKey] as String?;
   String? get registerEmailValue =>
@@ -74,6 +84,8 @@ extension ValueProperties on FormViewModel {
   String? get registerConfirmPasswordValue =>
       this.formValueMap[RegisterConfirmPasswordValueKey] as String?;
 
+  bool get hasRegisterName =>
+      this.formValueMap.containsKey(RegisterNameValueKey);
   bool get hasRegisterUserName =>
       this.formValueMap.containsKey(RegisterUserNameValueKey);
   bool get hasRegisterEmail =>
@@ -83,6 +95,8 @@ extension ValueProperties on FormViewModel {
   bool get hasRegisterConfirmPassword =>
       this.formValueMap.containsKey(RegisterConfirmPasswordValueKey);
 
+  bool get hasRegisterNameValidationMessage =>
+      this.fieldsValidationMessages[RegisterNameValueKey]?.isNotEmpty ?? false;
   bool get hasRegisterUserNameValidationMessage =>
       this.fieldsValidationMessages[RegisterUserNameValueKey]?.isNotEmpty ??
       false;
@@ -97,6 +111,8 @@ extension ValueProperties on FormViewModel {
           ?.isNotEmpty ??
       false;
 
+  String? get registerNameValidationMessage =>
+      this.fieldsValidationMessages[RegisterNameValueKey];
   String? get registerUserNameValidationMessage =>
       this.fieldsValidationMessages[RegisterUserNameValueKey];
   String? get registerEmailValidationMessage =>
@@ -108,6 +124,8 @@ extension ValueProperties on FormViewModel {
 }
 
 extension Methods on FormViewModel {
+  setRegisterNameValidationMessage(String? validationMessage) =>
+      this.fieldsValidationMessages[RegisterNameValueKey] = validationMessage;
   setRegisterUserNameValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[RegisterUserNameValueKey] =
           validationMessage;

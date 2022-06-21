@@ -1,11 +1,8 @@
 import 'package:collectiva/views/auth_flow_views/login_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
-import '../../constants/colors_constants.dart';
 import 'login.form.dart';
 
 @FormView(fields: [
@@ -90,7 +87,9 @@ class LoginView extends StatelessWidget with $LoginView {
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (inputText) {
-                                    if (inputText!.isEmpty || inputText != 'test@email.com') {
+                                    RegExp regExp = RegExp(r"^(?!\s*$).+");
+                                    if (regExp.hasMatch(inputText!) == false) {
+                                      loginEmailFocusNode.requestFocus();
                                       return 'Please fill in a valid email address...';
                                     }
                                     return null;
@@ -154,7 +153,9 @@ class LoginView extends StatelessWidget with $LoginView {
                                   ),
                                   // keyboardType: TextInputType.,
                                   validator: (inputText) {
-                                    if (inputText!.isEmpty || inputText != 'admin') {
+                                    RegExp regExp = RegExp(r"^(?!\s*$).+");
+                                    if (regExp.hasMatch(inputText!) == false) {
+                                      loginPasswordFocusNode.requestFocus();
                                       return 'Please enter a valid password!';
                                     }
                                     return null;
@@ -168,22 +169,27 @@ class LoginView extends StatelessWidget with $LoginView {
                                   width: screenSize.width * 0.6,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                    if(_formKey.currentState!.validate()) {
-                                        await model.navigateToCollections();
-                                    }else{
-
-                                    }
-    },
+                                      if (_formKey.currentState!.validate()) {
+                                        await model.loginUser(
+                                            loginEmailController.text,
+                                            loginPasswordController.text);
+                                      } else {}
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       primary: const Color(0xFF414042),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    child: const Text(
-                                      'Login',
-                                      style: TextStyle(fontSize: 24),
-                                    ),
+                                    child: model.isBusy
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                                color: Colors.lightBlueAccent),
+                                          )
+                                        : const Text(
+                                            'Login',
+                                            style: TextStyle(fontSize: 24),
+                                          ),
                                   ),
                                 ),
                                 Padding(

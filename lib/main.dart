@@ -1,3 +1,4 @@
+import 'package:collectiva/themes/snack_bar_theme.dart';
 import 'package:collectiva/themes/theme_setup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'app/app.locator.dart';
 import 'app/app.router.dart';
 
 Future main() async {
-  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  setupSnackBarUi();
   await Firebase.initializeApp();
   await ThemeManager.initialise();
   runApp(const CollectivaAppEntryPoint());

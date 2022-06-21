@@ -10,6 +10,7 @@ class CollectionsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CollectionsViewModel>.reactive(
       viewModelBuilder: () => CollectionsViewModel(),
+      onModelReady: (model) async => await model.getUsername(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: model.currentIndex == 0
@@ -17,12 +18,13 @@ class CollectionsView extends StatelessWidget {
               : model.currentIndex == 1
                   ? const Text('Goals', style: TextStyle(fontSize: 40))
                   : model.currentIndex == 2
-                      ? Column(children: const <Widget>[
-                          Text('Account', style: TextStyle(fontSize: 40)),
-                          SizedBox(
+                      ? Column(children:  <Widget>[
+                          const Text('Account', style: TextStyle(fontSize: 40)),
+                          const SizedBox(
                             height: 20,
                           ),
-                          Text('Welcome Daylin')
+                          Text('Welcome ${model.name}',
+                              style: const TextStyle(fontSize: 20)),
                         ])
                       : const Text('Collections',
                           style: TextStyle(fontSize: 40)),
@@ -304,149 +306,151 @@ class CollectionsView extends StatelessWidget {
   }
 
   Widget accountsPage(BuildContext context, CollectionsViewModel model) {
-    return Container(
-      color: collectivaPrimary,
-      height: MediaQuery.of(context).size.height * 0.6,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 2),
-        child: Material(
-          color: Colors.transparent,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-                child: InkWell(
-                  onTap: () async {
-                    await model.navigateToEditProfile();
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 8),
-                        child: Icon(
-                          Icons.account_circle_outlined,
-                          color: collectivaTertiary,
-                          size: 24,
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 8, 0, 16),
-                          child: Text(
-                            "Edit Profile",
-                            style: TextStyle(fontSize: 20),
+    return SingleChildScrollView(
+      child: Container(
+        color: collectivaPrimary,
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                  child: InkWell(
+                    onTap: () async {
+                      await model.navigateToEditProfile();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 8),
+                          child: Icon(
+                            Icons.account_circle_outlined,
+                            color: collectivaTertiary,
+                            size: 24,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 8),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: collectivaTertiary,
-                          size: 24,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const Divider(
-                height: 2,
-                thickness: 1,
-                color: collectivaTertiary,
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-                child: InkWell(
-                  onTap: () async {
-                    await model.navigateToPasswordReset();
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 8),
-                        child: Icon(
-                          Icons.lock_reset,
-                          color: collectivaTertiary,
-                          size: 24,
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 8, 0, 16),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(16, 8, 0, 16),
                             child: Text(
-                              "Change Password",
+                              "Edit Profile",
                               style: TextStyle(fontSize: 20),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 8),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: collectivaTertiary,
-                          size: 24,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 8),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: collectivaTertiary,
+                            size: 24,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const Divider(
-                height: 2,
-                thickness: 1,
-                color: collectivaTertiary,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 24),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 0, 16),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                await model.signOutNavigation();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: collectivaDarkBG,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                const Divider(
+                  height: 2,
+                  thickness: 1,
+                  color: collectivaTertiary,
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                  child: InkWell(
+                    onTap: () async {
+                      await model.navigateToPasswordReset();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 8),
+                          child: Icon(
+                            Icons.lock_reset,
+                            color: collectivaTertiary,
+                            size: 24,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(16, 8, 0, 16),
+                              child: Text(
+                                "Change Password",
+                                style: TextStyle(fontSize: 20),
+                              )),
+                        ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 8),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: collectivaTertiary,
+                            size: 24,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Divider(
+                  height: 2,
+                  thickness: 1,
+                  color: collectivaTertiary,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 24),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 0, 16),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await model.signOut();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: collectivaDarkBG,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
+                                child: const Text("Sign Out"),
                               ),
-                              child: const Text("Sign Out"),
                             ),
-                          ),
-                          const Text(
-                            'App Version v1.0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
+                            const Text(
+                              'App Version v1.0',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

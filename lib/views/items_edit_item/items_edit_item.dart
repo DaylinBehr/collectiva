@@ -1,8 +1,10 @@
 import 'package:collectiva/constants/colors_constants.dart';
-import 'package:collectiva/views/collections_add_collection/collections_add_collections_viewmodel.dart';
-import 'package:collectiva/views/items_edit_item/items_edit_item_viewmodel.dart';
+
+// import 'package:collectiva/views/items_edit_item/items_edit_item_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+
+import 'items_edit_item_viewmodel.dart';
 
 class EditItemView extends StatefulWidget {
   const EditItemView({Key? key}) : super(key: key);

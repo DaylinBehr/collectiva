@@ -1,5 +1,4 @@
 import 'package:collectiva/constants/colors_constants.dart';
-import 'package:collectiva/views/collections/collections_viewmodel.dart';
 import 'package:collectiva/views/items/items_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

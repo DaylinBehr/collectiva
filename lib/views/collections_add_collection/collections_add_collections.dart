@@ -2,6 +2,7 @@ import 'package:collectiva/constants/colors_constants.dart';
 import 'package:collectiva/views/collections_add_collection/collections_add_collections_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'dart:io';
 
 class AddCollectionView extends StatefulWidget {
   const AddCollectionView({Key? key}) : super(key: key);
@@ -148,11 +149,23 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                       0, 16, 0, 0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      'https://picsum.photos/seed/1010/600',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        await model.pickImage();
+                                      },
+                                      child: model.pickedFile != null
+                                          ? Image.file(
+                                              File(model.pickedFile!.path),
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              'https://picsum.photos/seed/1010/600',
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -316,9 +329,7 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: InkWell(
-                                    onTap: () async {
-
-                                    },
+                                    onTap: () async {},
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:

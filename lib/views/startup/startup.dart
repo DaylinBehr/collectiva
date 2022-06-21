@@ -12,7 +12,7 @@ class StartUp extends StatelessWidget {
     const String assetName = 'assets/images/Collectiva_Logo_256.svg';
     final Widget svg =
         SvgPicture.asset(assetName, semanticsLabel: 'Collectiva Logo', height: screenSize.height * 0.3,);
-    return ViewModelBuilder<StartUpViewModel>.nonReactive(
+    return ViewModelBuilder<StartUpViewModel>.reactive(
       viewModelBuilder: () => StartUpViewModel(),
       onModelReady: (model) async => await model.handleStartUpLogic(),
       builder: (context, model, child) => Scaffold(
