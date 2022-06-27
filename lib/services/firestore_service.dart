@@ -4,43 +4,116 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collectiva/models/item_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import '../models/collection_model.dart';
 import '../models/user_model.dart';
 
 class FireStoreService {
-  final CollectionReference _issuesCollectionReference =
-      FirebaseFirestore.instance.collection('issues');
+  final CollectionReference _collectionsCollectionReference =
+      FirebaseFirestore.instance.collection('collections');
+
   final CollectionReference _usersCollectionReference =
       FirebaseFirestore.instance.collection('users');
-  // Stream<List<Issue>> fetchLiveUserPosts( {required UserModel user}) async* {
-  // final Stream<QuerySnapshot> _userPostedIssuesStream = _issuesCollectionReference.doc(user.id).collection('submissions').snapshots();
-
-  // }
   Future getPostedCollections(UserModel? user) async {
     try {
-      var issueDocumentSnapshot = await _issuesCollectionReference
-          .doc(user?.id)
-          .collection('submissions').where('UserDeleted', isEqualTo: false).orderBy('DateLogged', descending: true)
-          .get();
-      if (issueDocumentSnapshot.docs.isNotEmpty) {
-        return issueDocumentSnapshot.docs.map((snapshot) => Item.fromDataMap(snapshot.data()))
-            // .where((mappedItem) => mappedItem?.nam != null)
+      var collectionQuerySnap =
+         await _collectionsCollectionReference.doc(user?.id).collection('user_collections').get();
+          // withConverter(
+          //       fromFirestore: CollectionModel.fromFirestore,
+          //       toFirestore: (CollectionModel collectionModel, _) =>
+          //           collectionModel.toFirestore(),
+          //     );
+      // final docSnap = await collectionDocRef.get();
+      // final collectionModel = docSnap.data();
+      if (collectionQuerySnap.docs.isNotEmpty) {
+        return collectionQuerySnap.docs.map((snapshot) => CollectionModel.fromFirestore(snapshot, SnapshotOptions()))
+            .where((mappedItem) => mappedItem?.collectionID != null)
             .toList();
       }
+      // if (collectionModel != null) {
+      //   return collectionModel;
+      // }
+    } on PlatformException catch (err) {
+        return err.message;
+    } catch (err){
+      return err;
+    }
+  }
+
+  Future getPostedItems(UserModel? user, String collectionID) async {
+    try {
+      var itemQuerySnap =
+      await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(collectionID).collection('items').get();
+      // withConverter(
+      //       fromFirestore: CollectionModel.fromFirestore,
+      //       toFirestore: (CollectionModel collectionModel, _) =>
+      //           collectionModel.toFirestore(),
+      //     );
+      // final docSnap = await collectionDocRef.get();
+      // final collectionModel = docSnap.data();
+      if (itemQuerySnap.docs.isNotEmpty) {
+        return itemQuerySnap.docs.map((snapshot) => ItemModel.fromFirestore(snapshot, SnapshotOptions()))
+            .where((mappedItem) => mappedItem?.id != null)
+            .toList();
+      }
+      // if (collectionModel != null) {
+      //   return collectionModel;
+      // }
+    } on PlatformException catch (err) {
+      return err.message;
+    } catch (err){
+      return err;
+    }
+  }
+
+
+  Future addCollection({required CollectionModel collectionModel, required UserModel user}) async {
+    try {
+    var collectionId = await _collectionsCollectionReference
+          .doc(user?.id).collection('user_collections')
+          .add(collectionModel.toFirestore());
+   await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(collectionId.id).update(
+       {'collectionID': collectionId.id});
+   await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(collectionId.id).collection('items').doc().set(
+       {});
+
+      // await _issuesCollectionReference.add(issue.toMap());
     } catch (err) {
       if (err is PlatformException) {
         return err.message;
       }
-
+      return err.toString();
+    }
+  }
+  Future addItem({required ItemModel itemModel, required UserModel user, required String collectionID}) async {
+    try {
+      var itemId = await _collectionsCollectionReference
+          .doc(user?.id).collection('user_collections').doc(collectionID).collection('items')
+          .add(itemModel.toFirestore());
+      await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(collectionID).collection('items').doc(itemId.id).update(
+          {'id': itemId.id});
+    } catch (err) {
+      if (err is PlatformException) {
+        return err.message;
+      }
       return err.toString();
     }
   }
 
-  Future deletePostedCollection(String queryID, UserModel? user)async {
+Future getCollectionDetails({required String id, required UserModel user})async {
     try{
-      await _issuesCollectionReference
-          .doc(user?.id)
-          .collection('submissions').doc(queryID).update({'UserDeleted': true});
+      return await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(id).get();
     }catch(err){
+      return err;
+    }
+}
+  Future deletePostedCollection(String queryID, UserModel? user) async {
+    try {
+      await _collectionsCollectionReference
+          .doc(user?.id)
+          .collection('user_collections')
+          .doc(queryID)
+          .delete();
+    } catch (err) {
       if (err is PlatformException) {
         return err.message;
       }
