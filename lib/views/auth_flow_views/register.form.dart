@@ -4,7 +4,7 @@
 // StackedFormGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs,  constant_identifier_names, non_constant_identifier_names,unnecessary_this
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -15,22 +15,58 @@ const String RegisterEmailValueKey = 'registerEmail';
 const String RegisterPasswordValueKey = 'registerPassword';
 const String RegisterConfirmPasswordValueKey = 'registerConfirmPassword';
 
+final Map<String, TextEditingController> _RegisterViewTextEditingControllers =
+    {};
+
+final Map<String, FocusNode> _RegisterViewFocusNodes = {};
+
+final Map<String, String? Function(String?)?> _RegisterViewTextValidations = {
+  RegisterNameValueKey: null,
+  RegisterUserNameValueKey: null,
+  RegisterEmailValueKey: null,
+  RegisterPasswordValueKey: null,
+  RegisterConfirmPasswordValueKey: null,
+};
+
 mixin $RegisterView on StatelessWidget {
-  final TextEditingController registerNameController =
-      TextEditingController(text: '');
-  final TextEditingController registerUserNameController =
-      TextEditingController(text: '');
-  final TextEditingController registerEmailController =
-      TextEditingController(text: '');
-  final TextEditingController registerPasswordController =
-      TextEditingController(text: '');
-  final TextEditingController registerConfirmPasswordController =
-      TextEditingController(text: '');
-  final FocusNode registerNameFocusNode = FocusNode();
-  final FocusNode registerUserNameFocusNode = FocusNode();
-  final FocusNode registerEmailFocusNode = FocusNode();
-  final FocusNode registerPasswordFocusNode = FocusNode();
-  final FocusNode registerConfirmPasswordFocusNode = FocusNode();
+  TextEditingController get registerNameController =>
+      _getFormTextEditingController(RegisterNameValueKey);
+  TextEditingController get registerUserNameController =>
+      _getFormTextEditingController(RegisterUserNameValueKey);
+  TextEditingController get registerEmailController =>
+      _getFormTextEditingController(RegisterEmailValueKey);
+  TextEditingController get registerPasswordController =>
+      _getFormTextEditingController(RegisterPasswordValueKey);
+  TextEditingController get registerConfirmPasswordController =>
+      _getFormTextEditingController(RegisterConfirmPasswordValueKey);
+  FocusNode get registerNameFocusNode =>
+      _getFormFocusNode(RegisterNameValueKey);
+  FocusNode get registerUserNameFocusNode =>
+      _getFormFocusNode(RegisterUserNameValueKey);
+  FocusNode get registerEmailFocusNode =>
+      _getFormFocusNode(RegisterEmailValueKey);
+  FocusNode get registerPasswordFocusNode =>
+      _getFormFocusNode(RegisterPasswordValueKey);
+  FocusNode get registerConfirmPasswordFocusNode =>
+      _getFormFocusNode(RegisterConfirmPasswordValueKey);
+
+  TextEditingController _getFormTextEditingController(String key,
+      {String? initialValue}) {
+    if (_RegisterViewTextEditingControllers.containsKey(key)) {
+      return _RegisterViewTextEditingControllers[key]!;
+    }
+    _RegisterViewTextEditingControllers[key] =
+        TextEditingController(text: initialValue);
+    return _RegisterViewTextEditingControllers[key]!;
+  }
+
+  FocusNode _getFormFocusNode(String key) {
+    if (_RegisterViewFocusNodes.containsKey(key)) {
+      return _RegisterViewFocusNodes[key]!;
+    }
+    _RegisterViewFocusNodes[key] = FocusNode();
+    return _RegisterViewFocusNodes[key]!;
+  }
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
@@ -42,37 +78,71 @@ mixin $RegisterView on StatelessWidget {
     registerConfirmPasswordController.addListener(() => _updateFormData(model));
   }
 
+  final bool _autoTextFieldValidation = true;
+  bool validateFormFields(FormViewModel model) {
+    _updateFormData(model, forceValidate: true);
+    return model.isFormValid;
+  }
+
   /// Updates the formData on the FormViewModel
-  void _updateFormData(FormViewModel model) => model.setData(
-        model.formValueMap
-          ..addAll({
-            RegisterNameValueKey: registerNameController.text,
-            RegisterUserNameValueKey: registerUserNameController.text,
-            RegisterEmailValueKey: registerEmailController.text,
-            RegisterPasswordValueKey: registerPasswordController.text,
-            RegisterConfirmPasswordValueKey:
-                registerConfirmPasswordController.text,
-          }),
-      );
+  void _updateFormData(FormViewModel model, {bool forceValidate = false}) {
+    model.setData(
+      model.formValueMap
+        ..addAll({
+          RegisterNameValueKey: registerNameController.text,
+          RegisterUserNameValueKey: registerUserNameController.text,
+          RegisterEmailValueKey: registerEmailController.text,
+          RegisterPasswordValueKey: registerPasswordController.text,
+          RegisterConfirmPasswordValueKey:
+              registerConfirmPasswordController.text,
+        }),
+    );
+    if (_autoTextFieldValidation || forceValidate) {
+      _updateValidationData(model);
+    }
+  }
+
+  /// Updates the fieldsValidationMessages on the FormViewModel
+  void _updateValidationData(FormViewModel model) =>
+      model.setValidationMessages({
+        RegisterNameValueKey: _getValidationMessage(RegisterNameValueKey),
+        RegisterUserNameValueKey:
+            _getValidationMessage(RegisterUserNameValueKey),
+        RegisterEmailValueKey: _getValidationMessage(RegisterEmailValueKey),
+        RegisterPasswordValueKey:
+            _getValidationMessage(RegisterPasswordValueKey),
+        RegisterConfirmPasswordValueKey:
+            _getValidationMessage(RegisterConfirmPasswordValueKey),
+      });
+
+  /// Returns the validation message for the given key
+  String? _getValidationMessage(String key) {
+    final validatorForKey = _RegisterViewTextValidations[key];
+    if (validatorForKey == null) return null;
+    String? validationMessageForKey =
+        validatorForKey(_RegisterViewTextEditingControllers[key]!.text);
+    return validationMessageForKey;
+  }
 
   /// Calls dispose on all the generated controllers and focus nodes
   void disposeForm() {
     // The dispose function for a TextEditingController sets all listeners to null
 
-    registerNameController.dispose();
-    registerNameFocusNode.dispose();
-    registerUserNameController.dispose();
-    registerUserNameFocusNode.dispose();
-    registerEmailController.dispose();
-    registerEmailFocusNode.dispose();
-    registerPasswordController.dispose();
-    registerPasswordFocusNode.dispose();
-    registerConfirmPasswordController.dispose();
-    registerConfirmPasswordFocusNode.dispose();
+    for (var controller in _RegisterViewTextEditingControllers.values) {
+      controller.dispose();
+    }
+    for (var focusNode in _RegisterViewFocusNodes.values) {
+      focusNode.dispose();
+    }
+
+    _RegisterViewTextEditingControllers.clear();
+    _RegisterViewFocusNodes.clear();
   }
 }
 
 extension ValueProperties on FormViewModel {
+  bool get isFormValid =>
+      this.fieldsValidationMessages.values.every((element) => element == null);
   String? get registerNameValue =>
       this.formValueMap[RegisterNameValueKey] as String?;
   String? get registerUserNameValue =>

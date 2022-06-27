@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class ItemView extends StatefulWidget {
-  const ItemView({Key? key}) : super(key: key);
+  final String id;
+  const ItemView({Key? key, required this.id}) : super(key: key);
 
   @override
   State<ItemView> createState() => _ItemViewState();

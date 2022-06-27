@@ -1,31 +1,42 @@
 import 'package:collectiva/constants/colors_constants.dart';
+import 'package:collectiva/views/collections_add_collection/collections_add_collections.form.dart';
 import 'package:collectiva/views/collections_add_collection/collections_add_collections_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:io';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:stacked/stacked_annotations.dart';
 
-class AddCollectionView extends StatefulWidget {
-  const AddCollectionView({Key? key}) : super(key: key);
+@FormView(fields: [
+  FormTextField(initialValue: '', name: "name"),
+  FormTextField(initialValue: '', name: "description"),
+  FormTextField(initialValue: '', name: 'goals'),
+])
+class AddCollectionView extends StatefulWidget with $AddCollectionView {
+  AddCollectionView({Key? key}) : super(key: key);
 
   @override
   State<AddCollectionView> createState() => _AddCollectionViewState();
 }
 
 class _AddCollectionViewState extends State<AddCollectionView> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final Widget noImgSvg =
+  SvgPicture.asset('assets/images/no_image.svg', semanticsLabel: 'Collectiva No Image', height: 80,);
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddCollectionViewModel>.reactive(
       viewModelBuilder: () => AddCollectionViewModel(),
       builder: (context, model, child) => Scaffold(
-        key: scaffoldKey,
         backgroundColor: collectivaTertiary,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           toolbarHeight: 0,
           automaticallyImplyLeading: false,
-          // title: Text('Add Collection'),
         ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -151,29 +162,26 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                     borderRadius: BorderRadius.circular(8),
                                     child: GestureDetector(
                                       onTap: () async {
-                                        await model.pickImage();
+                                       await model.pickCamera();
                                       },
-                                      child: model.pickedFile != null
-                                          ? Image.file(
-                                              File(model.pickedFile!.path),
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.network(
-                                              'https://picsum.photos/seed/1010/600',
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                            ),
+                                      child:
+                                          model.pickedFile != null && model.pickedFile!.isNotEmpty
+                                              ? Image.network(
+                                                  model.pickedFile!,
+                                                  width: 100,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              :
+                                          noImgSvg
+                                      ),
                                     ),
                                   ),
-                                ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: TextFormField(
-                                    // controller: textController1,
+                                    controller: widget.nameController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       floatingLabelBehavior:
@@ -212,7 +220,7 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: TextFormField(
-                                    // controller: textController2,
+                                    controller: widget.descriptionController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       floatingLabelBehavior:
@@ -242,6 +250,8 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                       filled: true,
                                       fillColor: collectivaDarkBG,
                                     ),
+                                    style: const TextStyle(
+                                        color: collectivaLightText),
                                     // style: FlutterFlowTheme.of(context).bodyText1,
                                     textAlign: TextAlign.start,
                                     maxLines: 3,
@@ -251,7 +261,7 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: TextFormField(
-                                    // controller: textController3,
+                                    controller: widget.goalsController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       floatingLabelBehavior:
@@ -283,6 +293,8 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                       filled: true,
                                       fillColor: collectivaDarkBG,
                                     ),
+                                    style: const TextStyle(
+                                        color: collectivaLightText),
                                     // style: FlutterFlowTheme.of(context).bodyText1,
                                     textAlign: TextAlign.start,
                                     keyboardType: TextInputType.number,
@@ -291,40 +303,67 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
-                                  child: TextFormField(
-                                    // controller: textController4,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.never,
-                                      labelText: 'Goal Completion Date',
-                                      labelStyle: const TextStyle(
-                                        color: collectivaLightText,
-                                      ),
-                                      hintText: 'Enter Goal Completion Date',
-                                      hintStyle: const TextStyle(
-                                          color: collectivaHintText),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: collectivaDarkBG,
-                                          width: 1,
-                                        ),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      await model
+                                          .getGoalCompletionDate(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SizedBox(
+                                        width: double.infinity,
+                                        child: model.goalCompleteDate != null
+                                            ? Text("Selected Date: " +
+                                                DateFormat(
+                                                "yyyy-MM-dd")
+                                            .format(model
+                                            .goalCompleteDate!))
+                                            : const Text(
+                                                'Select Goal Completion Date')),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: collectivaDarkBG,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: collectivaDarkBG,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      filled: true,
-                                      fillColor: collectivaDarkBG,
                                     ),
-                                    textAlign: TextAlign.start,
-                                    keyboardType: TextInputType.datetime,
                                   ),
                                 ),
+                                // Padding(
+                                //   padding: const EdgeInsetsDirectional.fromSTEB(
+                                //       16, 16, 16, 0),
+                                //   child: TextFormField(
+                                //     // controller: textController4,
+                                //     obscureText: false,
+                                //     decoration: InputDecoration(
+                                //       floatingLabelBehavior:
+                                //           FloatingLabelBehavior.never,
+                                //       labelText: 'Goal Completion Date',
+                                //       labelStyle: const TextStyle(
+                                //         color: collectivaLightText,
+                                //       ),
+                                //       hintText: 'Enter Goal Completion Date',
+                                //       hintStyle: const TextStyle(
+                                //           color: collectivaHintText),
+                                //       enabledBorder: OutlineInputBorder(
+                                //         borderSide: const BorderSide(
+                                //           color: collectivaDarkBG,
+                                //           width: 1,
+                                //         ),
+                                //         borderRadius: BorderRadius.circular(8),
+                                //       ),
+                                //       focusedBorder: OutlineInputBorder(
+                                //         borderSide: const BorderSide(
+                                //           color: collectivaDarkBG,
+                                //           width: 1,
+                                //         ),
+                                //         borderRadius: BorderRadius.circular(8),
+                                //       ),
+                                //       filled: true,
+                                //       fillColor: collectivaDarkBG,
+                                //     ),
+                                //     textAlign: TextAlign.start,
+                                //     keyboardType: TextInputType.datetime,
+                                //   ),
+                                // ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
@@ -346,8 +385,18 @@ class _AddCollectionViewState extends State<AddCollectionView> {
                                                 0.8,
                                             height: 50,
                                             child: ElevatedButton(
-                                              onPressed: () {
-                                                model.navigateToCollections();
+                                              onPressed: () async {
+                                                model.addNewCollection(
+                                                    name: widget
+                                                        .nameController.text
+                                                        .trim(),
+                                                    description: widget
+                                                        .descriptionController
+                                                        .text
+                                                        .trim(),
+                                                    goal: widget
+                                                        .goalsController.text
+                                                        .trim());
                                               },
                                               child: const Text('Create'),
                                               style: ElevatedButton.styleFrom(

@@ -7,7 +7,8 @@ import 'package:stacked/stacked.dart';
 import 'items_edit_item_viewmodel.dart';
 
 class EditItemView extends StatefulWidget {
-  const EditItemView({Key? key}) : super(key: key);
+  final String id;
+  const EditItemView({Key? key, required this.id}) : super(key: key);
 
   @override
   State<EditItemView> createState() => _EditItemViewState();

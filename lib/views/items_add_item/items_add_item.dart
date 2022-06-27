@@ -1,17 +1,34 @@
 import 'package:collectiva/constants/colors_constants.dart';
 import 'package:collectiva/views/items_add_item/items_add_item_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
-class AddItemView extends StatefulWidget {
-  const AddItemView({Key? key}) : super(key: key);
+import 'items_add_item.form.dart';
+
+class AddItemView extends StatefulWidget with $_AddItemViewState {
+  final String collectionID;
+  AddItemView({Key? key, required this.collectionID}) : super(key: key);
 
   @override
   State<AddItemView> createState() => _AddItemViewState();
 }
 
+@FormView(fields: [
+  FormTextField(initialValue: '', name: "name"),
+  FormTextField(initialValue: '', name: "description"),
+  FormTextField(initialValue: '', name: 'quantity'),
+  FormTextField(initialValue: '', name: 'customkey'),
+  FormTextField(initialValue: '', name: 'customValue'),
+])
 class _AddItemViewState extends State<AddItemView> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final Widget noImgSvg =
+  SvgPicture.asset('assets/images/no_image.svg', semanticsLabel: 'Collectiva No Image', height: 80,);
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddItemViewModel>.reactive(
@@ -24,7 +41,6 @@ class _AddItemViewState extends State<AddItemView> {
           elevation: 0,
           toolbarHeight: 0,
           automaticallyImplyLeading: false,
-          // title: Text('Add Collection'),
         ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
@@ -141,48 +157,57 @@ class _AddItemViewState extends State<AddItemView> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16, 16, 16, 0),
-                                  child: SizedBox(
-                                    child: ElevatedButton(
-                                      child: Row(
-                                        // mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: const <Widget>[
-                                          Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            'Object-Detection Add Item',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        primary: collectivaSecondary,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding: const EdgeInsetsDirectional.fromSTEB(
+                                //       16, 16, 16, 0),
+                                //   child: SizedBox(
+                                //     child: ElevatedButton(
+                                //       child: Row(
+                                //         // mainAxisSize: MainAxisSize.min,
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.start,
+                                //         children: const <Widget>[
+                                //           Icon(
+                                //             Icons.camera_alt_outlined,
+                                //             color: Colors.white,
+                                //           ),
+                                //           Text(
+                                //             'Object-Detection Add Item',
+                                //             style:
+                                //                 TextStyle(color: Colors.white),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //       onPressed: () {},
+                                //       style: ElevatedButton.styleFrom(
+                                //         primary: collectivaSecondary,
+                                //         shape: RoundedRectangleBorder(
+                                //           borderRadius:
+                                //               BorderRadius.circular(8),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 16, 0, 0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      'https://picsum.photos/seed/1010/600',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                          await model.pickCamera();
+                                        },
+                                        child:
+                                        model.pickedFile != null && model.pickedFile!.isNotEmpty
+                                            ? Image.network(
+                                          model.pickedFile!,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        )
+                                            :
+                                        noImgSvg
                                     ),
                                   ),
                                 ),
@@ -228,7 +253,7 @@ class _AddItemViewState extends State<AddItemView> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: TextFormField(
-                                    // controller: textController2,
+                                    controller: widget.descriptionController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       floatingLabelBehavior:
@@ -268,7 +293,7 @@ class _AddItemViewState extends State<AddItemView> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
                                   child: TextFormField(
-                                    // controller: textController3,
+                                    controller: widget.quantityController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       floatingLabelBehavior:
@@ -307,39 +332,28 @@ class _AddItemViewState extends State<AddItemView> {
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 16, 16, 0),
-                                  child: TextFormField(
-                                    // controller: textController4,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.never,
-                                      labelText: 'Acquisition Date',
-                                      labelStyle: const TextStyle(
-                                        color: collectivaLightText,
-                                      ),
-                                      hintText: 'Date Acquired',
-                                      hintStyle: const TextStyle(
-                                          color: collectivaHintText),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: collectivaDarkBG,
-                                          width: 1,
-                                        ),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      await model
+                                          .getDate(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SizedBox(
+                                        width: double.infinity,
+                                        child: model.goalCompleteDate != null
+                                            ? Text("Selected Date: " +
+                                            DateFormat(
+                                                "yyyy-MM-dd")
+                                                .format(model
+                                                .goalCompleteDate!))
+                                            : const Text(
+                                            'Select Goal Completion Date')),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: collectivaDarkBG,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: collectivaDarkBG,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      filled: true,
-                                      fillColor: collectivaDarkBG,
                                     ),
-                                    // style: FlutterFlowTheme.of(context).bodyText1,
-                                    textAlign: TextAlign.start,
-                                    keyboardType: TextInputType.datetime,
                                   ),
                                 ),
                                 const Padding(
@@ -539,7 +553,7 @@ class _AddItemViewState extends State<AddItemView> {
                                             height: 50,
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                model.navigateToItems();
+                                                model.addNewItem(name: widget.nameController.text.trim(), description: widget.descriptionController.text.trim(), quantity: widget.quantityController.text.trim(), collectionID: widget.collectionID);
                                               },
                                               child: const Text('Add Item'),
                                               style: ElevatedButton.styleFrom(

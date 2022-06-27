@@ -49,13 +49,15 @@ class AuthService with ReactiveServiceMixin {
         case 'user-disabled':
           return LoginResponse(
               loginUserResponse: null,
-              statusMessage: "Your Account Has Been Disabled!\nPlease Contact Support",
+              statusMessage:
+                  "Your Account Has Been Disabled!\nPlease Contact Support",
               errorCode: error.code,
               errorMessage: error.message!);
         case 'network-request-failed':
           return LoginResponse(
               loginUserResponse: null,
-              statusMessage: "Network Error!\nYou Are Offline Please Check Your Network Connection",
+              statusMessage:
+                  "Network Error!\nYou Are Offline Please Check Your Network Connection",
               errorCode: error.code,
               errorMessage: error.message!);
         default:
@@ -120,12 +122,34 @@ class AuthService with ReactiveServiceMixin {
       if (data is UserModel?) {
         _currentFireStoreUser = data;
       } else {
-        // _currentUser = null;
         await performLogOut();
       }
       return data;
     } else {
       return null;
+    }
+  }
+
+  Future<String> passwordReset(String resetEmail) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: resetEmail);
+      return "Successfully Sent Password Reset Email.\nPlease Check Your Inbox!";
+    } on FirebaseAuthException catch (e) {
+      return "${e.code} - ${e.message}";
+    }
+  }
+
+  Future<String> updateEmail(String newEmail) async {
+    try {
+      if (_currentFireStoreUser != null) {
+        await _firebaseAuth.currentUser?.updateEmail(newEmail);
+        return "Successfully Updated Email";
+      } else {
+        // throw FirebaseAuthException(code: 'Unknown Error', message: 'ERROR!');
+        return "Successfully Updated Email";
+      }
+    } on FirebaseAuthException catch (e) {
+      return "${e.code} - ${e.message}";
     }
   }
 }

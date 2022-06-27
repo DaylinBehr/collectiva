@@ -6,8 +6,8 @@ import 'package:stacked/stacked_annotations.dart';
 import 'login.form.dart';
 
 @FormView(fields: [
-  FormTextField(initialValue: '', isPassword: false, name: "loginEmail"),
-  FormTextField(name: 'loginPassword', isPassword: true, initialValue: ''),
+  FormTextField(initialValue: '', name: "loginEmail"),
+  FormTextField(name: 'loginPassword', initialValue: ''),
 ])
 class LoginView extends StatelessWidget with $LoginView {
   LoginView({Key? key}) : super(key: key);
