@@ -4,6 +4,7 @@ class UserModel {
   String username = '';
   String email = '';
 
+  /// Non-Default Constructor .
   UserModel({
     required this.id,
     required this.name,
@@ -11,6 +12,7 @@ class UserModel {
     required this.email,
   });
 
+  /// Static method to convert a firestore data object to a UserModel object .
   static UserModel? fromData(jsonDecode) {
     if (jsonDecode == null) {
       return null;
@@ -22,6 +24,8 @@ class UserModel {
       email: jsonDecode['email'] as String,
     );
   }
+
+  /// Static method to convert a UserModel to a json object fro Firebase.
   static toJson(UserModel userModel) {
     return {
       'id': userModel.id,
