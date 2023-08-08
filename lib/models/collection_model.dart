@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'item_model.dart';
 
+/// Data-model Class for managing collections of items in the application.
 class CollectionModel {
   final String? collectionName;
   final String? collectionDescription;
@@ -11,6 +11,7 @@ class CollectionModel {
   final Timestamp? collectionCreateDate;
   final Timestamp? collectionGoalDate;
 
+  /// Constructor
   CollectionModel(
       {required this.collectionName,
       required this.collectionDescription,
@@ -20,6 +21,7 @@ class CollectionModel {
       required this.collectionGoalDate,
       this.collectionID = ''});
 
+  /// Factory that converts firestore document objects into a dart object of type Collection Model
   factory CollectionModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -36,6 +38,7 @@ class CollectionModel {
     );
   }
 
+  /// Method to convert a CollectionModel object back to a map that in read in by Firebase
   Map<String, dynamic> toFirestore() {
     return {
       if (collectionName != null) "collectionName": collectionName,

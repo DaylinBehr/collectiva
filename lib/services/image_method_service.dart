@@ -6,6 +6,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../themes/snack_bar_theme.dart';
 
+/// Class that handles the user option when uploading a file
+/// Provides the user with the ability to upload from gallery or camera
 class ImageMethodService {
   final ImagePicker _picker = ImagePicker();
   final SnackbarService _snackbarService = locator<SnackbarService>();
@@ -22,6 +24,8 @@ class ImageMethodService {
     return null;
   }
 
+  /// Method that sets the image source to open the camera.
+  /// The result is then an image from the camera in the form of an XFile.
   Future<XFile?> selectCamera() async {
     try {
       return await _picker.pickImage(source: ImageSource.camera);

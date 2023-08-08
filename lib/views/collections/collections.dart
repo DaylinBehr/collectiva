@@ -70,7 +70,7 @@ class CollectionsView extends StatelessWidget {
             child: const Icon(Icons.add),
             backgroundColor: const Color(0xFF359F8A),
             onPressed: () async => await model
-                .navigateToAddCollection() //model.navigateToAddCollection(context),
+                .navigateToAddCollection()
             ),
       ),
     );
@@ -90,7 +90,7 @@ class CollectionsView extends StatelessWidget {
                     model.postedCollections!.isNotEmpty
                 ? ListView.builder(
                     itemCount: model
-                        .postedCollections?.length, //model.collections.length,
+                        .postedCollections?.length,
                     itemBuilder: (context, index) => AnimatedContainer(
                       // height: 60,
 
@@ -138,11 +138,6 @@ class CollectionsView extends StatelessWidget {
                                         children: <Widget>[
                                           Text(
                                             "Collection Name:\n${model.postedCollections![index]?.collectionName}",
-                                            //     +
-                                            //     model
-                                            //         .postedIssues![
-                                            //     index]!
-                                            //         .issueTitle!,
                                             style:
                                                 const TextStyle(fontSize: 24),
                                           ),
@@ -253,45 +248,16 @@ class CollectionsView extends StatelessWidget {
                                           children: <Widget>[
                                             Text(
                                               "Collection Name:\n${model.postedCollections![index]?.collectionName}",
-                                              //     +
-                                              //     model
-                                              //         .postedIssues![
-                                              //     index]!
-                                              //         .issueTitle!,
                                               style:
                                                   const TextStyle(fontSize: 24),
                                             ),
                                             // verticalSpaceSmall,
                                             const Text("GOAL: 1 / 10 ITEMS"
-                                                //     +
-                                                //     DateFormat(
-                                                //         "yyyy-MM-dd")
-                                                //         .format(model
-                                                //         .postedIssues![
-                                                //     index]!
-                                                //         .dateLogged
-                                                //         .toDate()) + "\nat: " + DateFormat('hh:mm:ss').format(model
-                                                //     .postedIssues![
-                                                // index]!
-                                                //     .dateLogged
-                                                //     .toDate()),
-                                                // style:
-                                                // ContentTextStyle,
                                                 ),
                                             const LinearProgressIndicator(
                                               value: 0.1,
                                               color: Colors.yellow,
                                             ),
-                                            // Text(
-                                            //   "Status: "
-                                            //   //     +
-                                            //   //     model
-                                            //   //         .postedIssues![
-                                            //   //     index]!
-                                            //   //         .issueStatus!,
-                                            //   // style:
-                                            //   // ContentTextStyle,
-                                            // ),
                                             Text(
                                               "Created on: " +
                                                   DateFormat("yyyy-MM-dd")
@@ -310,8 +276,6 @@ class CollectionsView extends StatelessWidget {
                                                           .collectionGoalDate!
                                                           .toDate()),
                                             ),
-                                            // verticalSpaceSmall,
-                                            // Text('Query ID: '+ model.postedIssues![index]!.issueID!, style: ContentTextStyle,),
                                           ]),
                                     ),
                                   ),

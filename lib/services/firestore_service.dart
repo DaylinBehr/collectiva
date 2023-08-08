@@ -7,12 +7,15 @@ import 'package:flutter/services.dart';
 import '../models/collection_model.dart';
 import '../models/user_model.dart';
 
+/// Class that handles all Firestore interaction
 class FireStoreService {
   final CollectionReference _collectionsCollectionReference =
       FirebaseFirestore.instance.collection('collections');
 
   final CollectionReference _usersCollectionReference =
       FirebaseFirestore.instance.collection('users');
+
+  /// Get all collections for the user
   Future getPostedCollections(UserModel? user) async {
     try {
       var collectionQuerySnap =
@@ -39,6 +42,7 @@ class FireStoreService {
     }
   }
 
+  /// Get items for the user in that Collection
   Future getPostedItems(UserModel? user, String collectionID) async {
     try {
       var itemQuerySnap =
@@ -65,7 +69,7 @@ class FireStoreService {
     }
   }
 
-
+/// Add a collection to firebase firestore for that user
   Future addCollection({required CollectionModel collectionModel, required UserModel user}) async {
     try {
     var collectionId = await _collectionsCollectionReference
@@ -84,6 +88,8 @@ class FireStoreService {
       return err.toString();
     }
   }
+
+  /// Add an item to firebase firestore for that user in their desired collection
   Future addItem({required ItemModel itemModel, required UserModel user, required String collectionID}) async {
     try {
       var itemId = await _collectionsCollectionReference
@@ -99,6 +105,7 @@ class FireStoreService {
     }
   }
 
+  /// Get a singular collection from firestore fro that user
 Future getCollectionDetails({required String id, required UserModel user})async {
     try{
       return await _collectionsCollectionReference.doc(user?.id).collection('user_collections').doc(id).get();
@@ -106,6 +113,8 @@ Future getCollectionDetails({required String id, required UserModel user})async 
       return err;
     }
 }
+
+/// Delete a Collection from firestore for that user
   Future deletePostedCollection(String queryID, UserModel? user) async {
     try {
       await _collectionsCollectionReference
@@ -122,6 +131,7 @@ Future getCollectionDetails({required String id, required UserModel user})async 
     }
   }
 
+  /// Create a User in firestore
   Future createUser(UserModel user) async {
     try {
       await _usersCollectionReference.doc(user.id).set(UserModel.toJson(user));
@@ -135,12 +145,14 @@ Future getCollectionDetails({required String id, required UserModel user})async 
     }
   }
 
+  /// Check if a user exists already against the firestore users collection
   Future<bool> userExists(User? currUser) async {
     DocumentReference userExists = _usersCollectionReference.doc(currUser!.uid);
     var data = await userExists.get();
     return data.exists;
   }
 
+  /// Get a singular user
   Future getUser(String id) async {
     UserModel? fetchedUser;
     try {
